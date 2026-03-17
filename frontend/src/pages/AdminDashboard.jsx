@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { GlobalContext } from '../context/GlobalContext';
 import axios from 'axios';
 import { Navigate } from 'react-router-dom';
+import { API_URL } from '../apiConfig';
 
 const AdminDashboard = () => {
     const { user, courses, fetchCourses } = useContext(GlobalContext);
@@ -23,7 +24,7 @@ const AdminDashboard = () => {
     const fetchUsers = async () => {
         try {
             const config = { headers: { Authorization: `Bearer ${user.token}` } };
-            const { data } = await axios.get('http://localhost:5000/api/users', config);
+            const { data } = await axios.get(`${API_URL}/users`, config);
             setUsers(data);
         } catch (error) {
             console.error('Failed to fetch users', error);
@@ -34,7 +35,7 @@ const AdminDashboard = () => {
         if (window.confirm('Are you sure you want to delete this course?')) {
             try {
                 const config = { headers: { Authorization: `Bearer ${user.token}` } };
-                await axios.delete(`http://localhost:5000/api/courses/${id}`, config);
+                await axios.delete(`${API_URL}/courses/${id}`, config);
                 fetchCourses();
             } catch (error) {
                 console.error('Failed to delete course', error);
@@ -60,10 +61,10 @@ const AdminDashboard = () => {
             const courseData = { title, description, instructor, price: Number(price), category, thumbnail };
 
             if (editingId) {
-                await axios.put(`http://localhost:5000/api/courses/${editingId}`, courseData, config);
+                await axios.put(`${API_URL}/courses/${editingId}`, courseData, config);
                 setEditingId(null);
             } else {
-                await axios.post('http://localhost:5000/api/courses', courseData, config);
+                await axios.post(`${API_URL}/courses`, courseData, config);
             }
             fetchCourses();
             setTitle(''); setDescription(''); setInstructor(''); setPrice(''); setCategory(''); setThumbnail('');
@@ -71,6 +72,7 @@ const AdminDashboard = () => {
             console.error('Failed to save course', error);
         }
     };
+
 
     if (!user || user.role !== 'admin') {
         return <Navigate to="/" replace />;

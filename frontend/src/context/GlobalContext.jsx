@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_URL } from '../apiConfig';
 
 export const GlobalContext = createContext();
 
@@ -26,7 +27,7 @@ export const FormProvider = ({ children }) => {
     const fetchUserProfile = async (token) => {
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            const { data } = await axios.get('http://localhost:5000/api/auth/profile', config);
+            const { data } = await axios.get(`${API_URL}/auth/profile`, config);
             setCart(data.cart || []);
             setFavorites(data.favorites || []);
             setMyLearning(data.myLearning || []);
@@ -37,7 +38,7 @@ export const FormProvider = ({ children }) => {
 
     const fetchCourses = async () => {
         try {
-            const { data } = await axios.get('http://localhost:5000/api/courses');
+            const { data } = await axios.get(`${API_URL}/courses`);
             setCourses(data);
         } catch (error) {
             console.error("Failed to load courses", error);
@@ -46,7 +47,7 @@ export const FormProvider = ({ children }) => {
 
     const loginUser = async (email, password) => {
         try {
-            const { data } = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+            const { data } = await axios.post(`${API_URL}/auth/login`, { email, password });
             setUser(data);
             localStorage.setItem('userInfo', JSON.stringify(data));
             await fetchUserProfile(data.token);
@@ -58,7 +59,7 @@ export const FormProvider = ({ children }) => {
 
     const registerUser = async (name, email, password) => {
         try {
-            const { data } = await axios.post('http://localhost:5000/api/auth/register', { name, email, password });
+            const { data } = await axios.post(`${API_URL}/auth/register`, { name, email, password });
             setUser(data);
             localStorage.setItem('userInfo', JSON.stringify(data));
             await fetchUserProfile(data.token);
@@ -83,7 +84,7 @@ export const FormProvider = ({ children }) => {
             if (user) {
                 try {
                     const config = { headers: { Authorization: `Bearer ${user.token}` } };
-                    await axios.post(`http://localhost:5000/api/users/cart/${course._id}`, {}, config);
+                    await axios.post(`${API_URL}/users/cart/${course._id}`, {}, config);
                 } catch (error) {
                     console.error('Failed to update cart on server');
                 }
@@ -96,7 +97,7 @@ export const FormProvider = ({ children }) => {
         if (user) {
             try {
                 const config = { headers: { Authorization: `Bearer ${user.token}` } };
-                await axios.delete(`http://localhost:5000/api/users/cart/${courseId}`, config);
+                await axios.delete(`${API_URL}/users/cart/${courseId}`, config);
             } catch (error) {
                 console.error('Failed to remove from cart on server');
             }
@@ -107,7 +108,7 @@ export const FormProvider = ({ children }) => {
         if (!user) return false;
         try {
             const config = { headers: { Authorization: `Bearer ${user.token}` } };
-            const { data } = await axios.post(`http://localhost:5000/api/courses/${courseId}/favorite`, {}, config);
+            const { data } = await axios.post(`${API_URL}/courses/${courseId}/favorite`, {}, config);
 
             // Re-fetch courses array if needed to map object IDs, but `data` returns array of ObjectIds in current backend.
             // Let's reload profile
@@ -123,7 +124,7 @@ export const FormProvider = ({ children }) => {
         if (!user) return false;
         try {
             const config = { headers: { Authorization: `Bearer ${user.token}` } };
-            const { data } = await axios.post(`http://localhost:5000/api/users/checkout`, {}, config);
+            const { data } = await axios.post(`${API_URL}/users/checkout`, {}, config);
             if (data.success) {
                 await fetchUserProfile(user.token);
                 return true;
@@ -133,6 +134,7 @@ export const FormProvider = ({ children }) => {
             return false;
         }
     };
+
 
     const clearCart = () => setCart([]);
 

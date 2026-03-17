@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { MessageCircle, X, Send } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { API_URL } from '../apiConfig';
 
 const Chatbot = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -21,8 +22,9 @@ const Chatbot = () => {
         setInput('');
 
         try {
-            const res = await axios.post('http://localhost:5000/api/chatbot', { message: userMsg.text });
+            const res = await axios.post(`${API_URL}/chatbot`, { message: userMsg.text });
             setMessages((prev) => [...prev, { text: res.data.response, isBot: true }]);
+
         } catch (error) {
             setMessages((prev) => [...prev, { text: "Sorry, I'm having trouble connecting right now.", isBot: true }]);
         }
@@ -59,8 +61,8 @@ const Chatbot = () => {
                                     initial={{ opacity: 0, x: msg.isBot ? -10 : 10 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm shadow-sm ${msg.isBot
-                                            ? "bg-white text-gray-800 self-start border border-gray-100"
-                                            : "bg-indigo-600 text-white self-end text-right"
+                                        ? "bg-white text-gray-800 self-start border border-gray-100"
+                                        : "bg-indigo-600 text-white self-end text-right"
                                         }`}
                                 >
                                     {msg.text}

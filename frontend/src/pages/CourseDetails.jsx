@@ -4,6 +4,7 @@ import axios from 'axios';
 import { GlobalContext } from '../context/GlobalContext';
 import { PlayCircle, Star, CheckCircle, Clock, Video, FileText, Smartphone } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { API_URL } from '../apiConfig';
 
 const CourseDetails = () => {
     const { id } = useParams();
@@ -15,7 +16,7 @@ const CourseDetails = () => {
     useEffect(() => {
         const fetchCourse = async () => {
             try {
-                const { data } = await axios.get(`http://localhost:5000/api/courses/${id}`);
+                const { data } = await axios.get(`${API_URL}/courses/${id}`);
                 setCourse(data);
             } catch (err) {
                 console.error(err);
@@ -25,6 +26,7 @@ const CourseDetails = () => {
         };
         fetchCourse();
     }, [id]);
+
 
     if (loading) return <div className="min-h-screen flex items-center justify-center text-indigo-600">Loading course details...</div>;
     if (!course) return <div className="min-h-screen flex items-center justify-center text-red-500">Course not found.</div>;
@@ -196,15 +198,16 @@ const CourseDetails = () => {
 
                                     try {
                                         const config = { headers: { Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}` } };
-                                        await axios.post(`http://localhost:5000/api/courses/${course._id}/reviews`, { rating, comment }, config);
+                                        await axios.post(`${API_URL}/courses/${course._id}/reviews`, { rating, comment }, config);
                                         // Refresh Course
-                                        const { data } = await axios.get(`http://localhost:5000/api/courses/${id}`);
+                                        const { data } = await axios.get(`${API_URL}/courses/${id}`);
                                         setCourse(data);
                                         e.target.reset();
                                         alert('Review submitted successfully!');
                                     } catch (err) {
                                         alert(err.response?.data?.message || 'Failed to submit review');
                                     }
+
                                 }}>
                                     <div className="mb-4">
                                         <label className="block text-sm font-medium text-gray-700 mb-2">Rating</label>

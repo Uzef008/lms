@@ -11,7 +11,7 @@ router.post('/', async (req, res) => {
 
     if (!process.env.OPENAI_API_KEY) {
         // Mock response if no API key is provided
-        let rep = "I am a mock AI assistant for SkillForge Academy! To enable real AI, add OPENAI_API_KEY in the backend .env file.";
+        let rep = "I am a mock AI assistant for SkillForge Academy! To enable real AI, add OPENAI_API_KEY in the Vercel dashboard.";
         if (message.toLowerCase().includes('python')) rep = "We have several Python courses, ranging from Beginner to Advanced!";
         else if (message.toLowerCase().includes('development')) rep = "Web development is our most popular category. Check out our Complete Web Development Bootcamp.";
         else if (message.toLowerCase().includes('free')) rep = "You can filter courses by 'Free' on the Courses Dashboard.";

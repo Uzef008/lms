@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { BookOpen, Users, Star, Award } from 'lucide-react';
+import { API_URL } from '../apiConfig';
 
 const InstructorProfile = () => {
     const { name } = useParams();
@@ -12,7 +13,7 @@ const InstructorProfile = () => {
         const fetchInstructorCourses = async () => {
             try {
                 // Fetch all courses and filter by instructor name (simple implementation)
-                const { data } = await axios.get('http://localhost:5000/api/courses');
+                const { data } = await axios.get(`${API_URL}/courses`);
                 const instructorCourses = data.filter(c => c.instructor.toLowerCase() === decodeURIComponent(name).toLowerCase());
                 setCourses(instructorCourses);
             } catch (err) {
@@ -23,6 +24,7 @@ const InstructorProfile = () => {
         };
         fetchInstructorCourses();
     }, [name]);
+
 
     if (loading) return <div className="min-h-screen flex items-center justify-center text-indigo-600">Loading profile...</div>;
 
