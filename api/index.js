@@ -54,9 +54,10 @@ app.use('/api/auth', authRoutes);
 
 // Wrapped for debug logging
 app.use('/api/courses', (req, res, next) => {
-    console.log("Courses route hit at " + new Date().toISOString());
+    console.log("Courses route hit");
     next();
 }, courseRoutes);
+
 
 app.use('/api/users', userRoutes);
 app.use('/api/chatbot', chatbotRoutes);

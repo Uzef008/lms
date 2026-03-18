@@ -12,9 +12,11 @@ const {
 } = require('../controllers/courseController');
 const { protect, admin } = require('../middleware/authMiddleware');
 
-router.route('/')
-    .get(getCourses)
-    .post(protect, admin, createCourse);
+router.get('/', (req, res) => {
+    res.json({ message: "Courses working" });
+});
+router.post('/', protect, admin, createCourse);
+
 
 router.route('/:id/reviews').post(protect, createCourseReview);
 
