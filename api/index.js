@@ -51,7 +51,13 @@ app.use(async (req, res, next) => {
 
 // API Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/courses', courseRoutes);
+
+// Wrapped for debug logging
+app.use('/api/courses', (req, res, next) => {
+    console.log("Courses route hit at " + new Date().toISOString());
+    next();
+}, courseRoutes);
+
 app.use('/api/users', userRoutes);
 app.use('/api/chatbot', chatbotRoutes);
 
@@ -64,6 +70,7 @@ app.post('/api/pay', (req, res) => {
 app.get('/api', (req, res) => {
     res.json({ message: "LMS API Serverless Function" });
 });
+
 
 // Export the app for Vercel (No app.listen() allowed)
 module.exports = app;
