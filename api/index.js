@@ -52,11 +52,8 @@ app.use(async (req, res, next) => {
 // API Routes
 app.use('/api/auth', authRoutes);
 
-// Wrapped for debug logging
-app.use('/api/courses', (req, res, next) => {
-    console.log("Courses route hit");
-    next();
-}, courseRoutes);
+app.use('/api/courses', courseRoutes);
+
 
 
 app.use('/api/users', userRoutes);
